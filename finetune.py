@@ -23,8 +23,8 @@ from peft import (
 
 def train(
     # model/data params
-    base_model: str = "",  # the only required argument
-    data_path: str = "./alpaca_data_cleaned.json",
+    base_model: str = "decapoda-research/llama-7b-hf", 
+    data_path: str = "data/alpaca_sv_data_cleaned.json",
     output_dir: str = "./lora-alpaca",
     # training hyperparams
     batch_size: int = 128,
@@ -191,25 +191,25 @@ def train(
 
 
 def generate_prompt(data_point):
-    # sorry about the formatting disaster gotta move fast
-    if data_point["input"]:
-        return f"""Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
 
-### Instruction:
+    if data_point["input"]:
+        return f"""Nedan finns en instruktion som beskriver en uppgift, tillsammans med en input som ger ytterligare sammanhang. Skriv ett svar som lämpligt slutför begäran.
+
+### Instruktion:
 {data_point["instruction"]}
 
 ### Input:
 {data_point["input"]}
 
-### Response:
+### Svar:
 {data_point["output"]}"""
     else:
-        return f"""Below is an instruction that describes a task. Write a response that appropriately completes the request.
+        return f"""Nedan finns en instruktion som beskriver en uppgift. Skriv ett svar som lämpligt slutför begäran.
 
-### Instruction:
+### Instruktion:
 {data_point["instruction"]}
 
-### Response:
+### Svar:
 {data_point["output"]}"""
 
 
