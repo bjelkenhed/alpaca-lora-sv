@@ -25,8 +25,8 @@ except:
 
 def main(
     load_8bit: bool = False,
-    base_model: str = "",
-    lora_weights: str = "tloen/alpaca-lora-7b",
+    base_model: str = "decapoda-research/llama-7b-hf",
+    lora_weights: str = "lora-alpaca",
 ):
     assert base_model, (
         "Please specify a --base_model, e.g. --base_model='decapoda-research/llama-7b-hf'"
@@ -109,7 +109,7 @@ def main(
             )
         s = generation_output.sequences[0]
         output = tokenizer.decode(s)
-        return output.split("### Response:")[1].strip()
+        return output.split("### Svar:")[1].strip()
 
     gr.Interface(
         fn=evaluate,
@@ -134,9 +134,9 @@ def main(
                 label="Output",
             )
         ],
-        title="🦙🌲 Alpaca-LoRA",
-        description="Alpaca-LoRA is a 7B-parameter LLaMA model finetuned to follow instructions. It is trained on the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) dataset and makes use of the Huggingface LLaMA implementation. For more information, please visit [the project's website](https://github.com/tloen/alpaca-lora).",
-    ).launch(share=False)
+        title="🦙🌲 Alpaca-LoRA Swedish",
+        description="Alpaca-LoRA is a 7B-parameter LLaMA model finetuned to follow instructions in swedish. It is trained on the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) dataset and makes use of the Huggingface LLaMA implementation. For more information, please visit [the project's website](https://github.com/bjelkenhed/alpaca-lora-sv).",
+    ).launch(share=True)
 
 
 def generate_prompt(instruction, input=None):
