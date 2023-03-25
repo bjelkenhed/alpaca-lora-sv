@@ -18,7 +18,7 @@ We translated the [alpaca_data_cleaned.json](https://github.com/tatsu-lab/stanfo
 pip install -r requirements.txt
 ```
 
-2. If bitsandbytes doesn't work, [install it from source.](https://github.com/TimDettmers/bitsandbytes/blob/main/compile_from_source.md). Pease see the troubleshooting section below for additional suggestions. 
+2. If bitsandbytes doesn't work, [install it from source.](https://github.com/TimDettmers/bitsandbytes/blob/main/compile_from_source.md). Please see the troubleshooting section below for additional suggestions. 
 
 ### Training (`finetune.py`)
 
