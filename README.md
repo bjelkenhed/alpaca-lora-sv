@@ -4,7 +4,7 @@
 
 
 # Alpaca-LoRA-sv
-A swedish finetuned instruction LLaMA
+Code and dataset for training a swedish finetuned instruction LLaMA
 
 This repository contains code training a swedish Alpaca model and striving to reproduce the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) results using [low-rank adaptation (LoRA)](https://arxiv.org/pdf/2106.09685.pdf).
 
