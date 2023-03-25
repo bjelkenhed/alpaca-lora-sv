@@ -30,6 +30,18 @@ python finetune.py \
     --data_path 'data/alpaca_sv_data_cleaned.json'
 ```
 
+## Example outputs
+
+```
+Instruction: "Varför kan det vara bra att vila sig i form före en löpartävling?"
+Response: "Att vila sig i form före en löpartävling kan vara avgörande för att säkerställa en framgångsrik prestation. Att vila sig i form kan hjälpa till att förbättra konditionen, öka energinivåerna och minska risken för skador."
+```
+
+```
+Instruction: "Vad krävs för att arbeta som Data Scientist?"
+Response: "För att arbeta som Data Scientist krävs vanligtvis en kandidatexamen eller masterexamen i datavetenskap, matematik, statistik eller en liknande ämne. Dessutom krävs vanligtvis flera års erfarenhet inom datavetenskap och programmering."
+```
+
 ### Troubleshooting
 
 #### undefined symbol: cget_col_row_stats / 8-bit not working / libsbitsandbytes_cpu.so not found
