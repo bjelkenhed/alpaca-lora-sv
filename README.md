@@ -46,6 +46,16 @@ eller masterexamen i datavetenskap, matematik, statistik eller en liknande ämne
 Dessutom krävs vanligtvis flera års erfarenhet inom datavetenskap och programmering."
 ```
 
+```
+Instruction: "Skriv en text om VMs historia"
+Response: "Världsmästerskapet i fotboll är en internationell fotbollsturnering som 
+arrangeras av Fifa och spelas vartannat år sedan 1930. Turneringen är en av de mest 
+populära sportevenemangen i världen och lockar miljontals tittare från hela världen."
+```
+
+
+
+
 ### Troubleshooting
 
 #### undefined symbol: cget_col_row_stats / 8-bit not working / libsbitsandbytes_cpu.so not found
