@@ -30,7 +30,7 @@ python finetune.py \
     --data_path 'data/alpaca_sv_data_cleaned.json'
 ```
 
-## Troubleshooting
+### Troubleshooting
 
 #### undefined symbol: cget_col_row_stats / 8-bit not working / libsbitsandbytes_cpu.so not found
 
