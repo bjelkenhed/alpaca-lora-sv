@@ -40,6 +40,15 @@ förbättra konditionen, öka energinivåerna och minska risken för skador."
 ```
 
 ```
+Instruction: "Skriv en berättelse om en hund som heter Ida"
+Response: "Det var en gång en hund som hette Ida. Hon var en liten och vänlig hund 
+som älskade att leka med sina vänner. En dag bestämde hon sig för att utforska världen 
+utanför sin trädgård och upptäckte att det fanns mycket att upptäcka. 
+Hon upptäckte nya platser, möter nya människor och gjorde nya vänner. 
+Hon upptäckte att det fanns mycket att upptäcka i världen utanför hennes trädgård."
+```
+
+```
 Instruction: "Vad krävs för att arbeta som Data Scientist?"
 Response: "För att arbeta som Data Scientist krävs vanligtvis en kandidatexamen 
 eller masterexamen i datavetenskap, matematik, statistik eller en liknande ämne. 
