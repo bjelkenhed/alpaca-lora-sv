@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import List
+from torch import inf
 
 import fire
 import torch

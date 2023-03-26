@@ -115,7 +115,7 @@ def main(
         fn=evaluate,
         inputs=[
             gr.components.Textbox(
-                lines=2, label="Instruction", placeholder="Tell me about alpacas."
+                lines=2, label="Instruction", placeholder="Hur kan man börja arbeta som en Data Scientist?"
             ),
             gr.components.Textbox(lines=2, label="Input", placeholder="none"),
             gr.components.Slider(minimum=0, maximum=1, value=0.1, label="Temperature"),
