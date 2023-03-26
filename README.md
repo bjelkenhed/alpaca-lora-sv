@@ -34,6 +34,7 @@ python finetune.py \
 
 ```
 Instruction: "Varför kan det vara bra att vila sig i form före en löpartävling?"
+
 Response: "Att vila sig i form före en löpartävling kan vara avgörande för att 
 säkerställa en framgångsrik prestation. Att vila sig i form kan hjälpa till att 
 förbättra konditionen, öka energinivåerna och minska risken för skador."
@@ -41,6 +42,7 @@ förbättra konditionen, öka energinivåerna och minska risken för skador."
 
 ```
 Instruction: "Skriv en berättelse om en hund som heter Ida"
+
 Response: "Det var en gång en hund som hette Ida. Hon var en liten och vänlig hund 
 som älskade att leka med sina vänner. En dag bestämde hon sig för att utforska världen 
 utanför sin trädgård och upptäckte att det fanns mycket att upptäcka. 
@@ -50,6 +52,7 @@ Hon upptäckte att det fanns mycket att upptäcka i världen utanför hennes tr�
 
 ```
 Instruction: "Vad krävs för att arbeta som Data Scientist?"
+
 Response: "För att arbeta som Data Scientist krävs vanligtvis en kandidatexamen 
 eller masterexamen i datavetenskap, matematik, statistik eller en liknande ämne. 
 Dessutom krävs vanligtvis flera års erfarenhet inom datavetenskap och programmering."
@@ -57,6 +60,7 @@ Dessutom krävs vanligtvis flera års erfarenhet inom datavetenskap och programm
 
 ```
 Instruction: "Skriv en text om VMs historia"
+
 Response: "Världsmästerskapet i fotboll är en internationell fotbollsturnering som 
 arrangeras av Fifa och spelas vartannat år sedan 1930. Turneringen är en av de mest 
 populära sportevenemangen i världen och lockar miljontals tittare från hela världen."
