@@ -52,6 +52,18 @@ Hon upptäckte nya platser, möter nya människor och gjorde nya vänner.
 Hon upptäckte att det fanns mycket att upptäcka i världen utanför hennes trädgård."
 ```
 
+
+
+```
+Instruction: "Ge 5 tips för hur man återhämtar sig efter en 40-årsfest"
+
+Response: "1. Återgå till din vanliga rutin så snart som möjligt.
+2. Ta dig tid att sova och vila ordentligt.
+3. Ta dig tid att äta hälsosamma maträtter och dricka vatten.
+4. Ta dig tid att göra någon form av fysisk aktivitet.
+5. Se till att hålla kontakten med dina vänner och familj."
+```
+
 ```
 Instruction: "Vad krävs för att arbeta som Data Scientist?"
 
