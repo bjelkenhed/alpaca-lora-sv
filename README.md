@@ -24,6 +24,12 @@ pip install -r requirements.txt
 
 ### Training (`finetune.py`)
 
+[Available base models on Huggingface](https://huggingface.co/decapoda-research)
+
+- decapoda-research/llama-7b-hf
+- decapoda-research/llama-13b-hf
+- decapoda-research/llama-30b-hf
+
 Example usage for training on Stanford Alpaca instructions translated to swedish:
 
 ```bash
