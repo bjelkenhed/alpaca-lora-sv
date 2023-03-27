@@ -38,7 +38,7 @@ Example usage for training on swedish summarization dataset with a total prompt 
 python finetune.py \
     --base_model 'decapoda-research/llama-7b-hf' \
     --data_path 'data/sv_data_summaries.json' \
-    --cutoff_len=1500
+    --cutoff_len=1500 --val_set_size=100
 ```
 
 ## Example outputs
