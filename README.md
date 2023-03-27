@@ -24,13 +24,20 @@ pip install -r requirements.txt
 
 ### Training (`finetune.py`)
 
-Example usage:
+Example usage for training on Stanford Alpaca instructions translated to swedish:
 
 ```bash
 python finetune.py \
     --base_model 'decapoda-research/llama-7b-hf' \
     --data_path 'data/alpaca_sv_data_cleaned.json'
 ```
+
+Example usage for training on swedish summarization dataset with a total prompt maxlength of 1500 tokens:
+
+python finetune.py \
+    --base_model 'decapoda-research/llama-7b-hf' \
+    --data_path 'data/sv_data_summaries.json' \
+    --cutoff_len=1500
 
 ## Example outputs
 
