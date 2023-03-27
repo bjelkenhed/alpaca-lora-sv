@@ -9,6 +9,7 @@ import torch.nn as nn
 import bitsandbytes as bnb
 from datasets import load_dataset
 import transformers
+from datasets import load_dataset, interleave_datasets, concatenate_datasets, DatasetDict
 
 assert (
     "LlamaTokenizer" in transformers._import_structure["models.llama"]
@@ -124,6 +125,18 @@ def train(
             ]  # could be sped up, probably
         return tokenized_full_prompt
 
+    def get_dataset(data_path):
+        if len(data_path.split(',')) > 1:
+            dataset_paths = [path.strip() for path in data_path.split(',')]
+            datasets = [load_dataset("json", data_files=path)['train'] for path in dataset_paths]
+            #dataset = interleave_datasets(datasets, stopping_strategy="all_exhausted")
+            dataset = DatasetDict({'train': concatenate_datasets(datasets)})
+        else:
+            dataset = load_dataset("json", data_files=data_path)
+
+        return dataset
+
+
     model = prepare_model_for_int8_training(model)
 
     config = LoraConfig(
@@ -136,7 +149,7 @@ def train(
     )
     model = get_peft_model(model, config)
 
-    data = load_dataset("json", data_files=data_path)
+    data = get_dataset(data_path)
 
     if val_set_size > 0:
         train_val = data["train"].train_test_split(
