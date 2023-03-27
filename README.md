@@ -113,3 +113,7 @@ populära sportevenemangen i världen och lockar miljontals tittare från hela v
 
 cp libbitsandbytes_cuda117.so libbitsandbytes_cpu.so
 
+#### No module named 'torch._six'
+
+pip install deepspeed --upgrade
+
