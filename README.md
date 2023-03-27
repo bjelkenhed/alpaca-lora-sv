@@ -30,7 +30,7 @@ pip install -r requirements.txt
 - decapoda-research/llama-13b-hf
 - decapoda-research/llama-30b-hf
 
-# Example usage for training on Stanford Alpaca instructions translated to swedish:
+#### Example usage for training on Stanford Alpaca instructions translated to swedish:
 
 ```bash
 python finetune.py \
@@ -38,7 +38,7 @@ python finetune.py \
     --data_path 'data/alpaca_sv_data_cleaned.json'
 ```
 
-# Example usage for training on swedish summarization dataset with a total prompt maxlength of 1500 tokens:
+#### Example usage for training on swedish summarization dataset with a total prompt maxlength of 1500 tokens:
 
 ```bash
 python finetune.py \
@@ -47,7 +47,7 @@ python finetune.py \
     --cutoff_len=1500 --val_set_size=100
 ```
 
-# Example usage for using multiple concatenated datasets: 
+#### Example usage for using multiple concatenated datasets: 
 
 ```bash
 python finetune.py \
