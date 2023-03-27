@@ -47,6 +47,14 @@ python finetune.py \
     --cutoff_len=1500 --val_set_size=100
 ```
 
+
+```bash
+python finetune.py \
+    --base_model 'decapoda-research/llama-7b-hf' \
+    --data_path 'data/alpaca_sv_data_cleaned.json, data/sv_data_summaries.json' \
+    --cutoff_len=1500 --val_set_size=100
+```
+
 ## Example outputs
 
 ```
