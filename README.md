@@ -111,9 +111,13 @@ populära sportevenemangen i världen och lockar miljontals tittare från hela v
 
 #### undefined symbol: cget_col_row_stats / 8-bit not working / libsbitsandbytes_cpu.so not found
 
+```
 cp libbitsandbytes_cuda117.so libbitsandbytes_cpu.so
+```
 
 #### No module named 'torch._six'
 
+```
 pip install deepspeed --upgrade
+```
 
