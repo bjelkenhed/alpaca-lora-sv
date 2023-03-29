@@ -156,7 +156,8 @@ def train(
         if data_path.endswith(".json"):
             return load_dataset("json", data_files=data_path)
         else:
-            return load_dataset(data_path, "sv")
+            return  load_dataset(data_path, "sv")
+            #return  DatasetDict({'train': load_dataset(data_path, "sv")['train']})
 
     def get_dataset(data_path, interleave=False):
         if len(data_path.split(',')) > 1:
@@ -185,6 +186,8 @@ def train(
     model = get_peft_model(model, config)
 
     data = get_dataset(data_path)
+
+    print(data)
 
     if resume_from_checkpoint:
         # Check the available weights and load them
