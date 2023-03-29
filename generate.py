@@ -24,7 +24,7 @@ except:
 
 
 def main(
-    load_8bit: bool = False,
+    load_8bit: bool = True,
     base_model: str = "decapoda-research/llama-7b-hf",
     lora_weights: str = "lora-alpaca",
 ):
@@ -39,6 +39,7 @@ def main(
             load_in_8bit=load_8bit,
             torch_dtype=torch.float16,
             device_map="auto",
+            max_memory={0: "24576MiB"}
         )
         model = PeftModel.from_pretrained(
             model,
