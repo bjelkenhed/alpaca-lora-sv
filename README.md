@@ -30,12 +30,13 @@ pip install -r requirements.txt
 - decapoda-research/llama-13b-hf
 - decapoda-research/llama-30b-hf
 
-#### Example usage for training on Stanford Alpaca instructions translated to swedish:
+#### Example usage for training on Stanford Alpaca instructions translated to swedish, using WandB for experiment tracking:
 
 ```bash
 python finetune.py \
     --base_model 'decapoda-research/llama-7b-hf' \
-    --data_path 'data/alpaca_sv_data_cleaned.json'
+    --data_path 'data/alpaca_sv_data_cleaned.json' \
+    --wandb_project alpaca
 ```
 
 #### Example usage for training on swedish summarization dataset with a total prompt maxlength of 1500 tokens:
