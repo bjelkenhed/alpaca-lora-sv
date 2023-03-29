@@ -156,7 +156,7 @@ def train(
         if data_path.endswith(".json"):
             return load_dataset("json", data_files=data_path)
         else:
-            return load_dataset(data_path)
+            return load_dataset(data_path, "sv")
 
     def get_dataset(data_path, interleave=False):
         if len(data_path.split(',')) > 1:
