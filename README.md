@@ -57,6 +57,22 @@ python finetune.py \
     --cutoff_len=1500 --val_set_size=100
 ```
 
+## Training on [LambdaLabs] (https://cloud.lambdalabs.com/)
+
+```
+git clone https://github.com/bjelkenhed/alpaca-lora-sv.git
+
+cd alpaca-lora-sv/
+
+pip install -r requirements.txt
+
+pip install protobuf==3.20.0
+
+cp /home/ubuntu/.local/lib/python3.8/site-packages/bitsandbytes/libbitsandbytes_cuda117.so \
+/home/ubuntu/.local/lib/python3.8/site-packages/bitsandbytes/libbitsandbytes_cpu.so
+
+```
+
 ## Example outputs
 
 ```
@@ -121,4 +137,6 @@ cp libbitsandbytes_cuda117.so libbitsandbytes_cpu.so
 ```
 pip install deepspeed --upgrade
 ```
+
+
 
