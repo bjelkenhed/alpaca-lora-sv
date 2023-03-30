@@ -1,15 +1,13 @@
 import sys
 
 import fire
-import torch
-from peft import PeftModel
-import transformers
 import gradio as gr
+import torch
+import transformers
+from peft import PeftModel
+from transformers import GenerationConfig, LlamaForCausalLM, LlamaTokenizer
 
-assert (
-    "LlamaTokenizer" in transformers._import_structure["models.llama"]
-), "LLaMA is now in HuggingFace's main branch.\nPlease reinstall it: pip uninstall transformers && pip install git+https://github.com/huggingface/transformers.git"
-from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig
+from utils.prompter import Prompter
 
 if torch.cuda.is_available():
     device = "cuda"
@@ -19,19 +17,23 @@ else:
 try:
     if torch.backends.mps.is_available():
         device = "mps"
-except:
+except:  # noqa: E722
     pass
 
 
 def main(
-    load_8bit: bool = True,
-    base_model: str = "decapoda-research/llama-7b-hf",
-    lora_weights: str = "lora-alpaca",
+    load_8bit: bool = False,
+    base_model: str = "",
+    lora_weights: str = "tloen/alpaca-lora-7b",
+    prompt_template: str = "",  # The prompt template to use, will default to alpaca.
+    server_name: str = "127.0.0.1",  # Allows to listen on all interfaces by providing '0.0.0.0'
+    share_gradio: bool = False,
 ):
-    assert base_model, (
-        "Please specify a --base_model, e.g. --base_model='decapoda-research/llama-7b-hf'"
-    )
+    assert (
+        base_model
+    ), "Please specify a --base_model, e.g. --base_model='decapoda-research/llama-7b-hf'"
 
+    prompter = Prompter(prompt_template)
     tokenizer = LlamaTokenizer.from_pretrained(base_model)
     if device == "cuda":
         model = LlamaForCausalLM.from_pretrained(
@@ -39,7 +41,6 @@ def main(
             load_in_8bit=load_8bit,
             torch_dtype=torch.float16,
             device_map="auto",
-            max_memory={0: "24576MiB"}
         )
         model = PeftModel.from_pretrained(
             model,
@@ -90,7 +91,7 @@ def main(
         max_new_tokens=128,
         **kwargs,
     ):
-        prompt = generate_prompt(instruction, input)
+        prompt = prompter.generate_prompt(instruction, input)
         inputs = tokenizer(prompt, return_tensors="pt")
         input_ids = inputs["input_ids"].to(device)
         generation_config = GenerationConfig(
@@ -110,21 +111,29 @@ def main(
             )
         s = generation_output.sequences[0]
         output = tokenizer.decode(s)
-        return output.split("### Svar:")[1].strip()
+        return prompter.get_response(output)
 
     gr.Interface(
         fn=evaluate,
         inputs=[
             gr.components.Textbox(
-                lines=2, label="Instruction", placeholder="Hur kan man börja arbeta som en Data Scientist?"
+                lines=2,
+                label="Instruction",
+                placeholder="Tell me about alpacas.",
             ),
             gr.components.Textbox(lines=2, label="Input", placeholder="none"),
-            gr.components.Slider(minimum=0, maximum=1, value=0.1, label="Temperature"),
-            gr.components.Slider(minimum=0, maximum=1, value=0.75, label="Top p"),
+            gr.components.Slider(
+                minimum=0, maximum=1, value=0.1, label="Temperature"
+            ),
+            gr.components.Slider(
+                minimum=0, maximum=1, value=0.75, label="Top p"
+            ),
             gr.components.Slider(
                 minimum=0, maximum=100, step=1, value=40, label="Top k"
             ),
-            gr.components.Slider(minimum=1, maximum=4, step=1, value=4, label="Beams"),
+            gr.components.Slider(
+                minimum=1, maximum=4, step=1, value=4, label="Beams"
+            ),
             gr.components.Slider(
                 minimum=1, maximum=2000, step=1, value=128, label="Max tokens"
             ),
@@ -135,31 +144,28 @@ def main(
                 label="Output",
             )
         ],
-        title="🦙🌲 Alpaca-LoRA Swedish",
-        description="Alpaca-LoRA is a 7B-parameter LLaMA model finetuned to follow instructions in swedish. It is trained on the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) dataset and makes use of the Huggingface LLaMA implementation. For more information, please visit [the project's website](https://github.com/bjelkenhed/alpaca-lora-sv).",
-    ).launch(share=True)
+        title="🦙🌲 Alpaca-LoRA",
+        description="Alpaca-LoRA is a 7B-parameter LLaMA model finetuned to follow instructions. It is trained on the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) dataset and makes use of the Huggingface LLaMA implementation. For more information, please visit [the project's website](https://github.com/tloen/alpaca-lora).",  # noqa: E501
+    ).launch(server_name=server_name, share=share_gradio)
+    # Old testing code follows.
 
-
-def generate_prompt(instruction, input=None):
-    if input:
-        return f"""Nedan finns en instruktion som beskriver en uppgift, tillsammans med en input som ger ytterligare sammanhang. Skriv ett svar som lämpligt slutför begäran.
-
-### Instruktion:
-{instruction}
-
-### Input:
-{input}
-
-### Svar:
-"""
-    else:
-        return f"""Nedan finns en instruktion som beskriver en uppgift. Skriv ett svar som lämpligt slutför begäran.
-
-### Instruktion:
-{instruction}
-
-### Svar:
-"""
+    """
+    # testing code for readme
+    for instruction in [
+        "Tell me about alpacas.",
+        "Tell me about the president of Mexico in 2019.",
+        "Tell me about the king of France in 2019.",
+        "List all Canadian provinces in alphabetical order.",
+        "Write a Python program that prints the first 10 Fibonacci numbers.",
+        "Write a program that prints the numbers from 1 to 100. But for multiples of three print 'Fizz' instead of the number and for the multiples of five print 'Buzz'. For numbers which are multiples of both three and five print 'FizzBuzz'.",  # noqa: E501
+        "Tell me five words that rhyme with 'shock'.",
+        "Translate the sentence 'I have no mouth but I must scream' into Spanish.",
+        "Count up from 1 to 500.",
+    ]:
+        print("Instruction:", instruction)
+        print("Response:", evaluate(instruction))
+        print()
+    """
 
 
 if __name__ == "__main__":

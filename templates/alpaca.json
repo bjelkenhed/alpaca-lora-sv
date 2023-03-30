@@ -1,0 +1,6 @@
+{
+    "description": "Template in swedish used by Alpaca-LoRA.",
+    "prompt_input": "Nedan finns en instruktion som beskriver en uppgift, tillsammans med en input som ger ytterligare sammanhang. Skriv ett lämpligt svar på uppgiften.\n\n### Instruktion:\n{instruction}\n\n### Input:\n{input}\n\n### Svar:\n",
+    "prompt_no_input": "Nedan finns en instruktion som beskriver en uppgift. Skriv ett lämpligt svar på uppgiften.\n\n### Instruktion:\n{instruction}\n\n### Svar:\n",
+    "response_split": "### Svar:"
+}

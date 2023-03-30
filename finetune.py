@@ -13,20 +13,22 @@ import torch.nn as nn
 import bitsandbytes as bnb
 """
 
-from peft import (  # noqa: E402
+from peft import (
     LoraConfig,
     get_peft_model,
     get_peft_model_state_dict,
     prepare_model_for_int8_training,
     set_peft_model_state_dict,
 )
-from transformers import LlamaForCausalLM, LlamaTokenizer  # noqa: F402
+from transformers import LlamaForCausalLM, LlamaTokenizer
+
+from utils.prompter import Prompter
 
 
 def train(
     # model/data params
     base_model: str = "",  # the only required argument
-    data_path: str = "yahma/alpaca-cleaned",
+    data_path: str = "data/alpaca_sv_data_cleaned.json",
     output_dir: str = "./lora-alpaca",
     # training hyperparams
     batch_size: int = 128,
@@ -52,34 +54,39 @@ def train(
     wandb_watch: str = "",  # options: false | gradients | all
     wandb_log_model: str = "",  # options: false | true
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
+    prompt_template_name: str = "alpaca",  # The prompt template to use, will default to alpaca.
 ):
-    print(
-        f"Training Alpaca-LoRA model with params:\n"
-        f"base_model: {base_model}\n"
-        f"data_path: {data_path}\n"
-        f"output_dir: {output_dir}\n"
-        f"batch_size: {batch_size}\n"
-        f"micro_batch_size: {micro_batch_size}\n"
-        f"num_epochs: {num_epochs}\n"
-        f"learning_rate: {learning_rate}\n"
-        f"cutoff_len: {cutoff_len}\n"
-        f"val_set_size: {val_set_size}\n"
-        f"lora_r: {lora_r}\n"
-        f"lora_alpha: {lora_alpha}\n"
-        f"lora_dropout: {lora_dropout}\n"
-        f"lora_target_modules: {lora_target_modules}\n"
-        f"train_on_inputs: {train_on_inputs}\n"
-        f"group_by_length: {group_by_length}\n"
-        f"wandb_project: {wandb_project}\n"
-        f"wandb_run_name: {wandb_run_name}\n"
-        f"wandb_watch: {wandb_watch}\n"
-        f"wandb_log_model: {wandb_log_model}\n"
-        f"resume_from_checkpoint: {resume_from_checkpoint}\n"
-    )
+    if int(os.environ.get("LOCAL_RANK", 0)) == 0:
+        print(
+            f"Training Alpaca-LoRA model with params:\n"
+            f"base_model: {base_model}\n"
+            f"data_path: {data_path}\n"
+            f"output_dir: {output_dir}\n"
+            f"batch_size: {batch_size}\n"
+            f"micro_batch_size: {micro_batch_size}\n"
+            f"num_epochs: {num_epochs}\n"
+            f"learning_rate: {learning_rate}\n"
+            f"cutoff_len: {cutoff_len}\n"
+            f"val_set_size: {val_set_size}\n"
+            f"lora_r: {lora_r}\n"
+            f"lora_alpha: {lora_alpha}\n"
+            f"lora_dropout: {lora_dropout}\n"
+            f"lora_target_modules: {lora_target_modules}\n"
+            f"train_on_inputs: {train_on_inputs}\n"
+            f"group_by_length: {group_by_length}\n"
+            f"wandb_project: {wandb_project}\n"
+            f"wandb_run_name: {wandb_run_name}\n"
+            f"wandb_watch: {wandb_watch}\n"
+            f"wandb_log_model: {wandb_log_model}\n"
+            f"resume_from_checkpoint: {resume_from_checkpoint or False}\n"
+            f"prompt template: {prompt_template_name}\n"
+        )
     assert (
         base_model
     ), "Please specify a --base_model, e.g. --base_model='decapoda-research/llama-7b-hf'"
     gradient_accumulation_steps = batch_size // micro_batch_size
+
+    prompter = Prompter(prompt_template_name)
 
     device_map = "auto"
     world_size = int(os.environ.get("WORLD_SIZE", 1))
@@ -137,10 +144,16 @@ def train(
         return result
 
     def generate_and_tokenize_prompt(data_point):
-        full_prompt = generate_prompt(data_point)
+        full_prompt = prompter.generate_prompt(
+            data_point["instruction"],
+            data_point["input"],
+            data_point["output"],
+        )
         tokenized_full_prompt = tokenize(full_prompt)
         if not train_on_inputs:
-            user_prompt = generate_prompt({**data_point, "output": ""})
+            user_prompt = prompter.generate_prompt(
+                data_point["instruction"], data_point["input"]
+            )
             tokenized_user_prompt = tokenize(user_prompt, add_eos_token=False)
             user_prompt_len = len(tokenized_user_prompt["input_ids"])
 
@@ -151,13 +164,23 @@ def train(
             ]  # could be sped up, probably
         return tokenized_full_prompt
 
+    model = prepare_model_for_int8_training(model)
+
+    config = LoraConfig(
+        r=lora_r,
+        lora_alpha=lora_alpha,
+        target_modules=lora_target_modules,
+        lora_dropout=lora_dropout,
+        bias="none",
+        task_type="CAUSAL_LM",
+    )
+    model = get_peft_model(model, config)
 
     def load_single_dataset(data_path):
-        if data_path.endswith(".json"):
+        if data_path.endswith(".json") or data_path.endswith(".jsonl"):
             return load_dataset("json", data_files=data_path)
         else:
             return  load_dataset(data_path, "sv")
-            #return  DatasetDict({'train': load_dataset(data_path, "sv")['train']})
 
     def get_dataset(data_path, interleave=False):
         if len(data_path.split(',')) > 1:
@@ -172,22 +195,7 @@ def train(
             dataset = load_single_dataset(data_path)
         return dataset
 
-
-    model = prepare_model_for_int8_training(model)
-
-    config = LoraConfig(
-        r=lora_r,
-        lora_alpha=lora_alpha,
-        target_modules=lora_target_modules,
-        lora_dropout=lora_dropout,
-        bias="none",
-        task_type="CAUSAL_LM",
-    )
-    model = get_peft_model(model, config)
-
     data = get_dataset(data_path)
-
-    print(data)
 
     if resume_from_checkpoint:
         # Check the available weights and load them
@@ -278,28 +286,6 @@ def train(
     print(
         "\n If there's a warning about missing keys above, please disregard :)"
     )
-
-def generate_prompt(data_point):
-
-    if data_point["input"]:
-        return f"""Nedan finns en instruktion som beskriver en uppgift, tillsammans med en input som ger ytterligare sammanhang. Skriv ett svar som lämpligt slutfö>
-
-### Instruktion:
-{data_point["instruction"]}
-
-### Input:
-{data_point["input"]}
-
-### Svar:
-{data_point["output"]}"""
-    else:
-        return f"""Nedan finns en instruktion som beskriver en uppgift. Skriv ett svar som lämpligt slutför begäran.
-
-### Instruktion:
-{data_point["instruction"]}
-
-### Svar:
-{data_point["output"]}"""
 
 
 if __name__ == "__main__":

@@ -1,0 +1,6 @@
+{
+    "description": "A shorter template in swedish to experiment with.",
+    "prompt_input": "### Instruktion:\n{instruction}\n\n### Input:\n{input}\n\n### Svar:\n",
+    "prompt_no_input": "### Instruktion:\n{instruction}\n\n### Svar:\n",
+    "response_split": "### Svar:"
+}
